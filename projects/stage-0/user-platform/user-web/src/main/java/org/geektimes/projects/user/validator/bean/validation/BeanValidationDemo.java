@@ -11,6 +11,7 @@ import java.util.Set;
 public class BeanValidationDemo {
 
     public static void main(String[] args) {
+        // 手动校验
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         // cache the factory somewhere
         Validator validator = factory.getValidator();

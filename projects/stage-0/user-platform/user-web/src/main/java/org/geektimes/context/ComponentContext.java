@@ -108,7 +108,7 @@ public class ComponentContext {
             Object injectedObject = lookupComponent(resourceName);
             field.setAccessible(true);
             try {
-                // 注入目标对象
+                // 注入目标对象(JNDI 初始化出来的对象里面还有Resource要注入)
                 field.set(component, injectedObject);
             } catch (IllegalAccessException e) {
             }

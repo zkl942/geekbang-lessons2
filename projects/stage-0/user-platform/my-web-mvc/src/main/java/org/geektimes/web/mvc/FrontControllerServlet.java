@@ -70,6 +70,7 @@ public class FrontControllerServlet extends HttpServlet {
             }
             controllersMapping.put(requestPath, controller);
         }
+        System.out.println(controllersMapping);
     }
 
     /**
@@ -135,19 +136,20 @@ public class FrontControllerServlet extends HttpServlet {
 
                     if (controller instanceof PageController) {
                         PageController pageController = PageController.class.cast(controller);
-                        String viewPath = pageController.execute(request, response);
+                        pageController.execute(request, response);
+//                        String viewPath = pageController.execute(request, response);
                         // 页面请求 forward
                         // request -> RequestDispatcher forward
                         // RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewPath);
                         // ServletContext -> RequestDispatcher forward
                         // ServletContext -> RequestDispatcher 必须以 "/" 开头
-                        ServletContext servletContext = request.getServletContext();
-                        if (!viewPath.startsWith("/")) {
-                            viewPath = "/" + viewPath;
-                        }
-                        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
-                        requestDispatcher.forward(request, response);
-                        return;
+//                        ServletContext servletContext = request.getServletContext();
+//                        if (!viewPath.startsWith("/")) {
+//                            viewPath = "/" + viewPath;
+//                        }
+//                        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
+//                        requestDispatcher.forward(request, response);
+//                        return;
                     } else if (controller instanceof RestController) {
                         // TODO
                     }

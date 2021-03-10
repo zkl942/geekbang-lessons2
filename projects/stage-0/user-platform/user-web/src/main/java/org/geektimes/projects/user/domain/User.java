@@ -1,5 +1,8 @@
 package org.geektimes.projects.user.domain;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -20,21 +23,26 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = AUTO)
-    @NotNull
+//    @NotNull
+    @Min(1)
+    // 必须大于 0 的整数
     private Long id;
 
     @Column
     private String name;
 
     @Column
-    @Max(32)
-    @Min(6)
+    @Length(min = 6, max = 32)
+    // 6-32 位
     private String password;
 
     @Column
+    @Email
     private String email;
 
     @Column
+    @Length(min = 11, max = 11)
+    // 采用中国大陆方式（11 位校验）
     private String phoneNumber;
 
     public Long getId() {

@@ -2,6 +2,8 @@ package org.geektimes.projects.user.web.controller;
 
 import org.geektimes.web.mvc.controller.PageController;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -18,6 +20,9 @@ public class HelloWorldController implements PageController {
     @POST
     @Path("/world") // /hello/world -> HelloWorldController
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-        return "index.jsp";
+        ServletContext servletContext = request.getServletContext();
+        RequestDispatcher rd = servletContext.getRequestDispatcher("/");
+        rd.forward(request, response);
+        return "";
     }
 }

@@ -1,13 +1,15 @@
-package org.geektimes.context;
+package org.geektimes.web.mvc.context;
 
-import org.geektimes.function.ThrowableAction;
-import org.geektimes.function.ThrowableFunction;
+import org.geektimes.web.mvc.controller.Controller;
+import org.geektimes.web.mvc.function.ThrowableAction;
+import org.geektimes.web.mvc.function.ThrowableFunction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.naming.*;
 import javax.servlet.ServletContext;
+import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Logger;
@@ -48,6 +50,16 @@ public class ComponentContext {
      */
     public static ComponentContext getInstance() {
         return (ComponentContext) servletContext.getAttribute(CONTEXT_NAME);
+    }
+
+    public ArrayList<Controller> getControllers() {
+        ArrayList controllers = new ArrayList<Controller>();
+        componentsMap.forEach((k, v) -> {
+            if (v instanceof Controller) {
+                controllers.add(v);
+            }
+        });
+        return controllers;
     }
 
     private static void close(Context context) {

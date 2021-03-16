@@ -22,11 +22,6 @@
 <div class="container">
 	<form class="form-signin" action="/register/validate">
 		<h1 class="h3 mb-3 font-weight-normal">注册</h1>
-<%--		<label for="inputId" class="sr-only">id</label>--%>
-<%--		<input--%>
-<%--				type="number" id="inputId" class="form-control"--%>
-<%--				placeholder="请输入id" name="inputId" required autofocus>--%>
-<%--		<label for="inputEmail" class="sr-only">电子邮件</label>--%>
 		<input
 				type="email" id="inputEmail" class="form-control"
 				placeholder="请输入电子邮件" name="inputEmail" required autofocus>

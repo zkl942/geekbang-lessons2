@@ -1,5 +1,6 @@
 package org.geektimes.projects.user.domain;
 
+import org.geektimes.projects.user.validator.bean.validation.UserValid;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -19,6 +20,7 @@ import static javax.persistence.GenerationType.AUTO;
  */
 @Entity
 @Table(name = "users")
+@UserValid(pwFloor = 6, pwCeiling = 32, phonenolength = 11)
 public class User implements Serializable {
 
     @Id
@@ -32,7 +34,7 @@ public class User implements Serializable {
     private String name;
 
     @Column
-    @Length(min = 6, max = 32)
+//    @Length(min = 6, max = 32)
     // 6-32 位
     private String password;
 
@@ -41,7 +43,7 @@ public class User implements Serializable {
     private String email;
 
     @Column
-    @Length(min = 11, max = 11)
+//    @Length(min = 11, max = 11)
     // 采用中国大陆方式（11 位校验）
     private String phoneNumber;
 

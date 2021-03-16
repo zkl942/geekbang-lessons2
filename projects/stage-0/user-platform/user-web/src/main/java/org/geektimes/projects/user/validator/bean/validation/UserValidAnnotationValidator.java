@@ -7,18 +7,22 @@ import javax.validation.ConstraintValidatorContext;
 
 public class UserValidAnnotationValidator implements ConstraintValidator<UserValid, User> {
 
-    private int idRange;
+    private int pwFloor;
+    private int pwCeiling;
+    private int phonenolength;
 
     public void initialize(UserValid annotation) {
-        this.idRange = annotation.idRange();
+        this.pwFloor = annotation.pwFloor();
+        this.pwCeiling = annotation.pwCeiling();
+        this.phonenolength = annotation.phonenolength();
     }
 
     @Override
     public boolean isValid(User value, ConstraintValidatorContext context) {
+        int pwLength = value.getPassword().length();
+        if (pwLength < pwFloor && pwLength > pwCeiling) return false;
+        if (value.getPhoneNumber().length() != 11) return false;
 
-        // 获取模板信息
-        context.getDefaultConstraintMessageTemplate();
-
-        return false;
+        return true;
     }
 }

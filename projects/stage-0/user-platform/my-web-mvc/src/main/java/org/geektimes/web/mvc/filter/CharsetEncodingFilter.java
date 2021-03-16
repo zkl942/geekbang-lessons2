@@ -1,4 +1,4 @@
-package org.geektimes.projects.user.web.filter;
+package org.geektimes.web.mvc.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

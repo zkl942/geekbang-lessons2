@@ -20,7 +20,7 @@ public class UserValidAnnotationValidator implements ConstraintValidator<UserVal
     @Override
     public boolean isValid(User value, ConstraintValidatorContext context) {
         int pwLength = value.getPassword().length();
-        if (pwLength < pwFloor && pwLength > pwCeiling) return false;
+        if (pwLength < pwFloor || pwLength > pwCeiling) return false;
         if (value.getPhoneNumber().length() != 11) return false;
 
         return true;

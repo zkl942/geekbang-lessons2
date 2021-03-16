@@ -51,27 +51,30 @@ public class FrontControllerServlet extends HttpServlet {
 
     /**
      * 读取所有的 RestController 的注解元信息 @Path
-     * 利用 ServiceLoader 技术（Java SPI）
+     * 利用 JNDI
      */
     private void initHandleMethods() {
         for (Controller controller : ComponentContext.getInstance().getControllers()) {
+            // SignupController
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
             String requestPath = pathFromClass.value();
-            Method[] publicMethods = controllerClass.getMethods();
+            Method[] publicMethods = controllerClass.getDeclaredMethods();
             // 处理方法支持的 HTTP 方法集合
             for (Method method : publicMethods) {
+                String fullPath = requestPath;
                 Set<String> supportedHttpMethods = findSupportedHttpMethods(method);
                 Path pathFromMethod = method.getAnnotation(Path.class);
                 if (pathFromMethod != null) {
-                    requestPath += pathFromMethod.value();
+                    fullPath += pathFromMethod.value();
                 }
-                handleMethodInfoMapping.put(requestPath,
-                        new HandlerMethodInfo(requestPath, method, supportedHttpMethods));
+                controllersMapping.put(fullPath, controller);
+                handleMethodInfoMapping.put(fullPath,
+                        new HandlerMethodInfo(fullPath, method, supportedHttpMethods));
             }
-            controllersMapping.put(requestPath, controller);
+
         }
-        System.out.println(controllersMapping);
+//        System.out.println(controllersMapping);
     }
 
     /**
@@ -136,21 +139,8 @@ public class FrontControllerServlet extends HttpServlet {
                     }
 
                     if (controller instanceof PageController) {
-                        PageController pageController = PageController.class.cast(controller);
-                        pageController.execute(request, response);
-//                        String viewPath = pageController.execute(request, response);
-                        // 页面请求 forward
-                        // request -> RequestDispatcher forward
-                        // RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewPath);
-                        // ServletContext -> RequestDispatcher forward
-                        // ServletContext -> RequestDispatcher 必须以 "/" 开头
-//                        ServletContext servletContext = request.getServletContext();
-//                        if (!viewPath.startsWith("/")) {
-//                            viewPath = "/" + viewPath;
-//                        }
-//                        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
-//                        requestDispatcher.forward(request, response);
-//                        return;
+                        Object[] params = {request, response};
+                        handlerMethodInfo.getHandlerMethod().invoke(controller, params);
                     } else if (controller instanceof RestController) {
                         // TODO
                     }
@@ -160,6 +150,7 @@ public class FrontControllerServlet extends HttpServlet {
                 if (throwable.getCause() instanceof IOException) {
                     throw (IOException) throwable.getCause();
                 } else {
+
                     throw new ServletException(throwable.getCause());
                 }
             }

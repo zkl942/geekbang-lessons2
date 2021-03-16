@@ -14,9 +14,7 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.AUTO;
 
 /**
- * 用户领域对象
- *
- * @since 1.0
+ * Domain model
  */
 @Entity
 @Table(name = "users")

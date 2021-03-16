@@ -18,10 +18,9 @@ public class HelloWorldController implements PageController {
 
     @GET
     @Path("/world") // /hello/world -> HelloWorldController
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         ServletContext servletContext = request.getServletContext();
         RequestDispatcher rd = servletContext.getRequestDispatcher("/");
         rd.forward(request, response);
-        return "";
     }
 }

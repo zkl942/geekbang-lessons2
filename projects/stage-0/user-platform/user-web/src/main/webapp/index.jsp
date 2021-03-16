@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="container">
-	<form class="form-signin" action="/register/validate">
+	<form class="form-signin" action="/register/validate" method="post">
 		<h1 class="h3 mb-3 font-weight-normal">注册</h1>
 		<input
 				type="email" id="inputEmail" class="form-control"

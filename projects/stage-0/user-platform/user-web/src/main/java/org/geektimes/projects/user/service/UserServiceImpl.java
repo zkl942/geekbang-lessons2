@@ -1,39 +1,42 @@
 package org.geektimes.projects.user.service;
 
 import org.geektimes.projects.user.domain.User;
+import org.geektimes.projects.user.repository.DatabaseUserRepository;
 import org.geektimes.projects.user.sql.LocalTransactional;
+import org.geektimes.projects.user.validator.bean.validation.DelegatingValidator;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.Set;
 
 public class UserServiceImpl implements UserService {
 
-    @Resource(name = "bean/EntityManager")
-    private EntityManager entityManager;
-
     @Resource(name = "bean/Validator")
     private Validator validator;
+
+    @Resource(name = "bean/DatabaseUserRepository")
+    private DatabaseUserRepository databaseUserRepository;
+
+    @Resource(name = "bean/DelegatingValidator")
+    private DelegatingValidator delegatingValidator;
 
     @Override
     // 默认需要事务
     @LocalTransactional
     public boolean register(User user) {
-        // before process
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+        // bean validation
+        Set<ConstraintViolation<User>> violations = delegatingValidator.validate(user);
 
-        // 主调用
-        try {
-            entityManager.persist(user);
-            transaction.commit();
-            return true;
-        } catch (IllegalStateException | RollbackException e) {
-            return false;
-        }
+        violations.forEach(c -> {
+            System.out.println(c.getMessage());
+        });
 
+        // once all validation passes, hand over to repository for storage
+        return databaseUserRepository.save(user);
 
         // 调用其他方法方法
 //        update(user); // 涉及事务

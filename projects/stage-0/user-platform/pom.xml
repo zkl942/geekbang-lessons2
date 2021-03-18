@@ -39,6 +39,7 @@
         <maven.flatten.version>1.2.5</maven.flatten.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <jolokia-core.version>1.6.2</jolokia-core.version>
     </properties>
 
     <!-- Artifacts 依赖版本管理 -->
@@ -104,6 +105,14 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate.validator.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-core -->
+            <dependency>
+                <groupId>org.jolokia</groupId>
+                <artifactId>jolokia-core</artifactId>
+                <version>${jolokia-core.version}</version>
+            </dependency>
+
 
         </dependencies>
 

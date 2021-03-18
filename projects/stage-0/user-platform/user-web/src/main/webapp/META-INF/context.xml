@@ -61,4 +61,8 @@
 			  type="org.geektimes.projects.user.repository.DatabaseUserRepository"
 			  factory="org.apache.naming.factory.BeanFactory" />
 
+	<Resource name="bean/MBeanServerDelegation" auth="Container"
+			  type="org.geektimes.projects.user.management.MBeanServerDelegation"
+			  factory="org.apache.naming.factory.BeanFactory" />
+
 </Context>

@@ -49,7 +49,15 @@ public class ComponentContext {
 
     private ClassLoader classLoader;
 
+    /**
+     * componentsMap has all the original components. This is necessary in the injection phase
+     * because cglib proxy class lost all the fields of original class and injectComponents
+     * wont work with proxy class componentClass
+     */
     private Map<String, Object> componentsMap = new LinkedHashMap<>();
+    /**
+     * proxiedComponentsMap has all the proxied components
+     */
     private Map<String, Object> proxiedComponentsMap = new LinkedHashMap<>();
 
     /**

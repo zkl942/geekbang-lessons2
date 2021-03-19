@@ -154,6 +154,7 @@ public class ComponentContext {
     }
 
     private void injectComponents(Object component, Class<?> componentClass) {
+        // cglib proxy class lost all fields of original class
         Stream.of(componentClass.getDeclaredFields())
                 .filter(field -> {
                     int mods = field.getModifiers();

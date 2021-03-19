@@ -45,6 +45,10 @@
 			  type="org.geektimes.projects.user.service.UserServiceImpl"
 			  factory="org.apache.naming.factory.BeanFactory" />
 
+	<Resource name="bean/UserServiceTesting" auth="Container"
+			  type="org.geektimes.projects.user.service.UserServiceTestingImpl"
+			  factory="org.apache.naming.factory.BeanFactory" />
+
 	<Resource name="bean/SignupController" auth="Container"
 			  type="org.geektimes.projects.user.web.controller.SignupController"
 			  factory="org.apache.naming.factory.BeanFactory" />

@@ -2,13 +2,10 @@ package org.geektimes.projects.user.service;
 
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.repository.DatabaseUserRepository;
-import org.geektimes.projects.user.sql.LocalTransactional;
+import org.geektimes.web.mvc.sql.LocalTransactional;
 import org.geektimes.projects.user.validator.bean.validation.DelegatingValidator;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;

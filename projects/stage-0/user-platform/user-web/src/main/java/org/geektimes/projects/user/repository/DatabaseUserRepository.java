@@ -51,17 +51,18 @@ public class DatabaseUserRepository implements UserRepository {
 
     @Override
     public boolean save(User user) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
+//        EntityTransaction transaction = entityManager.getTransaction();
+//        transaction.begin();
 
-        try {
+//        try {
             entityManager.persist(user);
-            transaction.commit();
-            return true;
-        } catch (Exception e) {
-            transaction.rollback();
-            return false;
-        }
+//            transaction.commit();
+//            return true;
+//        } catch (Exception e) {
+//            transaction.rollback();
+//            return false;
+//        }
+        return true;
     }
 
     @Override
@@ -71,7 +72,8 @@ public class DatabaseUserRepository implements UserRepository {
 
     @Override
     public boolean update(User user) {
-        return false;
+        entityManager.persist(user);
+        return true;
     }
 
     @Override

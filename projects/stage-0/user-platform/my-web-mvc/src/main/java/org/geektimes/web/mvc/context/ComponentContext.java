@@ -1,15 +1,18 @@
 package org.geektimes.web.mvc.context;
 
+import net.sf.cglib.proxy.Enhancer;
+import org.geektimes.web.mvc.aop.*;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.function.ThrowableAction;
 import org.geektimes.web.mvc.function.ThrowableFunction;
+import org.geektimes.web.mvc.sql.LocalTransactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.naming.*;
 import javax.servlet.ServletContext;
-import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Logger;
@@ -32,10 +35,15 @@ public class ComponentContext {
 
 //    private static ApplicationContext applicationContext;
 
-//    public void setApplicationContext(ApplicationContext applicationContext){
+//    public List<String> getNeedProxyAnnotationNames() {
+//        return needProxyAnnotationNames;
+//    }
+
+    //    public void setApplicationContext(ApplicationContext applicationContext){
 //        ComponentContext.applicationContext = applicationContext;
 //        WebApplicationContextUtils.getRootWebApplicationContext()
 //    }
+//    private List<String> needProxyAnnotationNames = new ArrayList<>();
 
     private Context envContext; // Component Env Context
 
@@ -75,7 +83,40 @@ public class ComponentContext {
         this.classLoader = servletContext.getClassLoader();
         initEnvContext();
         instantiateComponents();
+        proxyComponents(); // for transaction AOP
         initializeComponents();
+    }
+
+    private void proxyComponents() {
+        Iterator<Map.Entry<String, Object>> itr = componentsMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            boolean needProxy = false;
+            Map.Entry<String, Object> entry = itr.next();
+            Object component = entry.getValue();
+            Class clazz = component.getClass();
+            Method[] methods = clazz.getDeclaredMethods(); // public or private
+            for (Method method: methods) {
+                // TODO: hardcoded LocalTransactional here
+                if (method.isAnnotationPresent(LocalTransactional.class)) {
+                    needProxy = true;
+                    break;
+                }
+            }
+            if (needProxy) {
+                // replace with proxied component
+                Enhancer enhancer = new Enhancer();
+                enhancer.setSuperclass(clazz);
+                ProxyCallback proxy = new ProxyCallback(component);
+                // TODO: hardcoded TransactionalHandler
+                TransactionalHandler transactionalHandler = new TransactionalHandler();
+                proxy.addBeforeHandler(transactionalHandler);
+                proxy.addAfterHandler(transactionalHandler);
+                proxy.addErrorHandler(transactionalHandler);
+                enhancer.setCallback(proxy);
+//                componentsMap.put(entry.getKey(), enhancer.create());
+                entry.setValue(enhancer.create());
+            }
+        }
     }
 
     /**
@@ -117,7 +158,8 @@ public class ComponentContext {
                 }).forEach(field -> {
             Resource resource = field.getAnnotation(Resource.class);
             String resourceName = resource.name();
-            Object injectedObject = lookupComponent(resourceName);
+//            Object injectedObject = lookupComponent(resourceName);
+            Object injectedObject = componentsMap.get(resourceName);
             field.setAccessible(true);
             try {
                 // 注入目标对象(JNDI 初始化出来的对象里面还有Resource要注入)

@@ -50,6 +50,7 @@ public class ComponentContext {
     private ClassLoader classLoader;
 
     private Map<String, Object> componentsMap = new LinkedHashMap<>();
+    private Map<String, Object> proxiedComponentsMap = new LinkedHashMap<>();
 
     /**
      * 获取 ComponentContext
@@ -113,8 +114,8 @@ public class ComponentContext {
                 proxy.addAfterHandler(transactionalHandler);
                 proxy.addErrorHandler(transactionalHandler);
                 enhancer.setCallback(proxy);
-//                componentsMap.put(entry.getKey(), enhancer.create());
-                entry.setValue(enhancer.create());
+                proxiedComponentsMap.put(entry.getKey(), enhancer.create());
+//                entry.setValue(enhancer.create());
             }
         }
     }
@@ -126,7 +127,10 @@ public class ComponentContext {
         // 遍历获取所有的组件名称
         List<String> componentNames = listAllComponentNames();
         // 通过依赖查找，实例化对象（ Tomcat BeanFactory setter 方法的执行，仅支持简单类型）
-        componentNames.forEach(name -> componentsMap.put(name, lookupComponent(name)));
+        componentNames.forEach(name -> {
+            componentsMap.put(name, lookupComponent(name));
+            proxiedComponentsMap.put(name, lookupComponent(name));
+        });
     }
 
     /**
@@ -159,7 +163,7 @@ public class ComponentContext {
             Resource resource = field.getAnnotation(Resource.class);
             String resourceName = resource.name();
 //            Object injectedObject = lookupComponent(resourceName);
-            Object injectedObject = componentsMap.get(resourceName);
+            Object injectedObject = proxiedComponentsMap.get(resourceName);
             field.setAccessible(true);
             try {
                 // 注入目标对象(JNDI 初始化出来的对象里面还有Resource要注入)

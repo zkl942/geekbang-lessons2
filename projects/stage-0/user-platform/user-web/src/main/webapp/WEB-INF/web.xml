@@ -7,7 +7,7 @@
 
     <!-- 请确保这个 Listener 放置在首位 -->
     <listener>
-        <listener-class>org.geektimes.web.mvc.listerner.ComponentContextInitializerListener</listener-class>
+        <listener-class>org.geektimes.projects.user.web.listener.ComponentContextInitializerListener</listener-class>
     </listener>
     
 <!--    <listener>-->
@@ -41,7 +41,7 @@
 
     <servlet>
         <servlet-name>FrontControllerServlet</servlet-name>
-        <servlet-class>org.geektimes.web.mvc.FrontControllerServlet</servlet-class>
+        <servlet-class>org.geektimes.projects.user.web.FrontControllerServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

@@ -1,11 +1,11 @@
-package org.geektimes.web.mvc.context;
+package org.geektimes.projects.user.context;
 
 import net.sf.cglib.proxy.Enhancer;
-import org.geektimes.web.mvc.aop.*;
+import org.geektimes.projects.user.aop.*;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.function.ThrowableAction;
 import org.geektimes.web.mvc.function.ThrowableFunction;
-import org.geektimes.web.mvc.sql.LocalTransactional;
+import org.geektimes.projects.user.sql.LocalTransactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -56,9 +56,9 @@ public class ComponentContext {
      */
     private Map<String, Object> componentsMap = new LinkedHashMap<>();
     /**
-     * proxiedComponentsMap has all the proxied components
+     * proxiedComponentsMap has all (and only) the proxy components
      */
-    private Map<String, Object> proxiedComponentsMap = new LinkedHashMap<>();
+    private Map<String, Object> proxyComponentsMap = new LinkedHashMap<>();
 
     /**
      * 获取 ComponentContext
@@ -122,8 +122,7 @@ public class ComponentContext {
                 proxy.addAfterHandler(transactionalHandler);
                 proxy.addErrorHandler(transactionalHandler);
                 enhancer.setCallback(proxy);
-                proxiedComponentsMap.put(entry.getKey(), enhancer.create());
-//                entry.setValue(enhancer.create());
+                proxyComponentsMap.put(entry.getKey(), enhancer.create());
             }
         }
     }
@@ -137,7 +136,6 @@ public class ComponentContext {
         // 通过依赖查找，实例化对象（ Tomcat BeanFactory setter 方法的执行，仅支持简单类型）
         componentNames.forEach(name -> {
             componentsMap.put(name, lookupComponent(name));
-            proxiedComponentsMap.put(name, lookupComponent(name));
         });
     }
 
@@ -171,8 +169,10 @@ public class ComponentContext {
                 }).forEach(field -> {
             Resource resource = field.getAnnotation(Resource.class);
             String resourceName = resource.name();
-//            Object injectedObject = lookupComponent(resourceName);
-            Object injectedObject = proxiedComponentsMap.get(resourceName);
+            Object injectedObject = proxyComponentsMap.get(resourceName);
+            if (injectedObject == null) {
+                injectedObject = componentsMap.get(resourceName);
+            }
             field.setAccessible(true);
             try {
                 // 注入目标对象(JNDI 初始化出来的对象里面还有Resource要注入)
@@ -254,6 +254,10 @@ public class ComponentContext {
      * @return
      */
     public <C> C getComponent(String name) {
+        Object obj = proxyComponentsMap.get(name);
+        if (obj != null) {
+            return (C) obj;
+        }
         return (C) componentsMap.get(name);
     }
 

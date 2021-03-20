@@ -1,23 +1,17 @@
-package org.geektimes.web.mvc;
+package org.geektimes.projects.user.web;
 
 import org.apache.commons.lang.StringUtils;
-import org.geektimes.web.mvc.context.ComponentContext;
+import org.geektimes.projects.user.context.ComponentContext;
+import org.geektimes.web.mvc.HandlerMethodInfo;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.controller.PageController;
 import org.geektimes.web.mvc.controller.RestController;
-import org.geektimes.web.mvc.header.CacheControlHeaderWriter;
-import org.geektimes.web.mvc.header.annotation.CacheControl;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import java.io.IOException;
@@ -55,6 +49,7 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private void initHandleMethods() {
         for (Controller controller : ComponentContext.getInstance().getControllers()) {
+//        for (Controller controller : ServiceLoader.load(Controller.class)) {
             // SignupController
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);

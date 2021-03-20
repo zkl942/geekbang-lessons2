@@ -1,7 +1,7 @@
 package org.geektimes.projects.user.service;
 
 import org.geektimes.projects.user.domain.User;
-import org.geektimes.web.mvc.sql.LocalTransactional;
+import org.geektimes.projects.user.sql.LocalTransactional;
 
 /**
  * 用户服务

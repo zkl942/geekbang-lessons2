@@ -1,17 +1,17 @@
 package org.geektimes.projects.user.repository;
 
+import org.geektimes.projects.user.aop.TransactionalHandler;
 import org.geektimes.web.mvc.function.ThrowableFunction;
-import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.RollbackException;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.*;
@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.apache.commons.lang.ClassUtils.primitiveToWrapper;
 import static org.apache.commons.lang.ClassUtils.wrapperToPrimitive;
 
 public class DatabaseUserRepository implements UserRepository {
@@ -46,23 +47,81 @@ public class DatabaseUserRepository implements UserRepository {
     }
 
     private Connection getConnection() {
-        return dbConnectionManager.getConnection();
+//        return dbConnectionManager.getConnection();
+        return TransactionalHandler.connectionThreadLocal.get();
     }
 
     @Override
     public boolean save(User user) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-            entityManager.persist(user);
-            transaction.commit();
-            return true;
-        } catch (Exception e) {
-            transaction.rollback();
-            return false;
-        }
+//        EntityTransaction transaction = entityManager.getTransaction();
+//        transaction.begin();
+//
+//        try {
+//            entityManager.persist(user);
+//            transaction.commit();
+//            return true;
+//        } catch (Exception e) {
+//            transaction.rollback();
+//            return false;
+//        }
 //        return true;
+
+        // not using hibernate here
+        String sql = "INSERT INTO users(name,password,email,phoneNumber) VALUES (?,?,?,?)";
+        int rowNum = executeUpdate(sql, user.getName(), user.getPassword(), user.getEmail(), user.getPhoneNumber());
+        return rowNum > 0;
+    }
+
+    /**
+     * 通用的dml更新语句执行方法
+     *
+     * @param sql  sql语句
+     * @param args sql语句参数
+     * @return 更新语句影响的行数
+     */
+    protected int executeUpdate(String sql, Object... args) {
+        Connection connection = getConnection();
+        System.out.println("sql : conn: " + connection.hashCode());
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            prepareStatementSqlArgs(preparedStatement, args);
+            int row = preparedStatement.executeUpdate();
+            return row;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * 准备 prepareStatement 的sql参数，反射调用 prepareStatment.setString(1,""); 方法
+     *
+     * @param preparedStatement 语句
+     * @param args              参数
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    private void prepareStatementSqlArgs(PreparedStatement preparedStatement, Object[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            Class<?> argType = arg.getClass();
+            Class<?> wrapperType = primitiveToWrapper(argType);
+
+            if (wrapperType == null) {
+                wrapperType = argType;
+            }
+
+            String methodName = preparedStatementMethodMappings.get(argType);
+            Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);
+            method.invoke(preparedStatement, i + 1, args[i]);
+        }
     }
 
     @Override
@@ -72,8 +131,9 @@ public class DatabaseUserRepository implements UserRepository {
 
     @Override
     public boolean update(User user) {
-        entityManager.persist(user);
-        return true;
+        String sql = "UPDATE USERS SET EMAIL = ?, PASSWORD = ?, PHONENUMBER = ?";
+        int rowNum = executeUpdate(sql, user.getEmail(), user.getPassword(), user.getPhoneNumber());
+        return rowNum > 0;
     }
 
     @Override

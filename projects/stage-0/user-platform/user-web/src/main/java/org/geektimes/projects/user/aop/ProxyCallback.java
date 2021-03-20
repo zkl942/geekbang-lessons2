@@ -1,6 +1,5 @@
-package org.geektimes.web.mvc.aop;
+package org.geektimes.projects.user.aop;
 
-import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 

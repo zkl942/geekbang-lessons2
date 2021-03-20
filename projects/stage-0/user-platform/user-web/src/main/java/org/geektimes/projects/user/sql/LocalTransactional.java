@@ -1,4 +1,4 @@
-package org.geektimes.web.mvc.sql;
+package org.geektimes.projects.user.sql;
 
 import java.lang.annotation.*;
 import java.sql.Connection;

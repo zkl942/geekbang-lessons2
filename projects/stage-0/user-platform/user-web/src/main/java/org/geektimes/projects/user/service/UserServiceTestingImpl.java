@@ -25,6 +25,14 @@ public class UserServiceTestingImpl {
     private DatabaseUserRepository databaseUserRepository;
 
     /**
+     * 通过 @Resource 注入一个自身的代理对象
+     * 解决cglib无法拦截类内部调用的问题
+     * https://chenjianhui.site/2020-07-15-spring-aop-internal-call/
+     */
+    @Resource(name = "bean/UserServiceTesting")
+    private UserServiceTestingImpl userServiceTestingImpl;
+
+    /**
      * transactions:  save->update->update(with error)
      * expected result: first update result
      * WORKING!!!!!
@@ -41,7 +49,12 @@ public class UserServiceTestingImpl {
 
         databaseUserRepository.save(user);
 
-        ((UserServiceTestingImpl)ComponentContext.getInstance().getComponent("bean/UserServiceTesting")).aopMethod2();
+        /**
+         * cglib内部调用不触发拦截器
+         */
+//        aopMethod2();
+//        ((UserServiceTestingImpl)ComponentContext.getInstance().getComponent("bean/UserServiceTesting")).aopMethod2();
+        userServiceTestingImpl.aopMethod2();
     }
 
     @LocalTransactional
@@ -52,7 +65,8 @@ public class UserServiceTestingImpl {
 
         databaseUserRepository.update(user);
 
-        ((UserServiceTestingImpl)ComponentContext.getInstance().getComponent("bean/UserServiceTesting")).aopMethod3();
+//        ((UserServiceTestingImpl)ComponentContext.getInstance().getComponent("bean/UserServiceTesting")).aopMethod3();
+        userServiceTestingImpl.aopMethod3();
     }
 
     @LocalTransactional

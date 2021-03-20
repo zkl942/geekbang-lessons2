@@ -28,13 +28,6 @@ import java.util.function.Function;
 public interface ThrowableAction {
 
     /**
-     * Executes the action
-     *
-     * @throws Throwable if met with error
-     */
-    void execute() throws Throwable;
-
-    /**
      * Executes {@link ThrowableAction}
      *
      * @param action {@link ThrowableAction}
@@ -47,4 +40,11 @@ public interface ThrowableAction {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Executes the action
+     *
+     * @throws Throwable if met with error
+     */
+    void execute() throws Throwable;
 }

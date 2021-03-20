@@ -1,20 +1,12 @@
 package org.geektimes.projects.user.service;
 
-import org.geektimes.projects.user.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.repository.DatabaseUserRepository;
-import org.geektimes.projects.user.sql.DBConnectionManager;
 import org.geektimes.projects.user.sql.LocalTransactional;
-import org.geektimes.projects.user.validator.bean.validation.DelegatingValidator;
 
 import javax.annotation.Resource;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.constraints.AssertTrue;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Set;
 
 public class UserServiceTestingImpl {
 
@@ -78,6 +70,6 @@ public class UserServiceTestingImpl {
         databaseUserRepository.update(user);
 
         // trigger exception
-        int b = 1/0;
+        int b = 1 / 0;
     }
 }

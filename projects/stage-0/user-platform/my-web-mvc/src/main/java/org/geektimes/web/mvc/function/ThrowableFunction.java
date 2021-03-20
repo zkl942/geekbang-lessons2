@@ -4,6 +4,19 @@ package org.geektimes.web.mvc.function;
 public interface ThrowableFunction<T, R> {
 
     /**
+     * Executes {@link ThrowableFunction}
+     *
+     * @param t        the function argument
+     * @param function {@link ThrowableFunction}
+     * @param <T>      the source type
+     * @param <R>      the return type
+     * @return the result after execution
+     */
+    static <T, R> R execute(T t, ThrowableFunction<T, R> function) {
+        return function.execute(t);
+    }
+
+    /**
      * Applies this function to the given argument.
      *
      * @param t the function argument
@@ -27,19 +40,6 @@ public interface ThrowableFunction<T, R> {
             throw new RuntimeException(e.getCause());
         }
         return result;
-    }
-
-    /**
-     * Executes {@link ThrowableFunction}
-     *
-     * @param t        the function argument
-     * @param function {@link ThrowableFunction}
-     * @param <T>      the source type
-     * @param <R>      the return type
-     * @return the result after execution
-     */
-    static <T, R> R execute(T t, ThrowableFunction<T, R> function) {
-        return function.execute(t);
     }
 }
 

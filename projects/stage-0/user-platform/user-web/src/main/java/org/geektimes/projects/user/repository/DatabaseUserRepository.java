@@ -1,19 +1,21 @@
 package org.geektimes.projects.user.repository;
 
 import org.geektimes.projects.user.aop.TransactionalHandler;
-import org.geektimes.web.mvc.function.ThrowableFunction;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
+import org.geektimes.web.mvc.function.ThrowableFunction;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -24,26 +26,41 @@ import static org.apache.commons.lang.ClassUtils.wrapperToPrimitive;
 
 public class DatabaseUserRepository implements UserRepository {
 
-    @Resource(name = "bean/DBConnectionManager")
-    private DBConnectionManager dbConnectionManager;
-
-    @Resource(name = "bean/EntityManager")
-    private EntityManager entityManager;
-
+    public static final String INSERT_USER_DML_SQL =
+            "INSERT INTO users(name,password,email,phoneNumber) VALUES " +
+                    "(?,?,?,?)";
+    public static final String QUERY_ALL_USERS_DML_SQL = "SELECT id,name,password,email,phoneNumber FROM users";
+    /**
+     * 数据类型与 ResultSet 方法名映射
+     */
+    static Map<Class, String> resultSetMethodMappings = new HashMap<>();
+    static Map<Class, String> preparedStatementMethodMappings = new HashMap<>();
     private static Logger logger = Logger.getLogger(DatabaseUserRepository.class.getName());
-
     /**
      * 通用处理方式
      */
     private static Consumer<Throwable> COMMON_EXCEPTION_HANDLER = e -> logger.log(Level.SEVERE, e.getMessage());
 
-    public static final String INSERT_USER_DML_SQL =
-            "INSERT INTO users(name,password,email,phoneNumber) VALUES " +
-                    "(?,?,?,?)";
+    static {
+        resultSetMethodMappings.put(Long.class, "getLong");
+        resultSetMethodMappings.put(String.class, "getString");
 
-    public static final String QUERY_ALL_USERS_DML_SQL = "SELECT id,name,password,email,phoneNumber FROM users";
+        preparedStatementMethodMappings.put(Long.class, "setLong"); // long
+        preparedStatementMethodMappings.put(String.class, "setString"); //
+
+
+    }
+
+    @Resource(name = "bean/DBConnectionManager")
+    private DBConnectionManager dbConnectionManager;
+    @Resource(name = "bean/EntityManager")
+    private EntityManager entityManager;
 
     public DatabaseUserRepository() {
+    }
+
+    private static String mapColumnLabel(String fieldName) {
+        return fieldName;
     }
 
     private Connection getConnection() {
@@ -215,27 +232,5 @@ public class DatabaseUserRepository implements UserRepository {
             exceptionHandler.accept(e);
         }
         return null;
-    }
-
-
-    private static String mapColumnLabel(String fieldName) {
-        return fieldName;
-    }
-
-    /**
-     * 数据类型与 ResultSet 方法名映射
-     */
-    static Map<Class, String> resultSetMethodMappings = new HashMap<>();
-
-    static Map<Class, String> preparedStatementMethodMappings = new HashMap<>();
-
-    static {
-        resultSetMethodMappings.put(Long.class, "getLong");
-        resultSetMethodMappings.put(String.class, "getString");
-
-        preparedStatementMethodMappings.put(Long.class, "setLong"); // long
-        preparedStatementMethodMappings.put(String.class, "setString"); //
-
-
     }
 }

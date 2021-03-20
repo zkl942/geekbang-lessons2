@@ -34,7 +34,7 @@ public class CharsetEncodingFilter implements Filter {
         }
 
         // 执行过滤链
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 
     @Override

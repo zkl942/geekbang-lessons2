@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorHandler {
@@ -22,7 +21,7 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
         protected Object initialValue() {
             Connection conn = null;
             try {
-                conn = ((DataSource)ComponentContext.getInstance().getComponent("jdbc/UserPlatformDB")).getConnection();
+                conn = ((DataSource) ComponentContext.getInstance().getComponent("jdbc/UserPlatformDB")).getConnection();
                 /**
                  * autoCommit mode must be off, otherwise each time you call
                  * flush you'll be commiting straight to the DB.
@@ -62,6 +61,7 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
     /**
      * move through each nested transaction.
      * For each nested transaction, create another different savePoint
+     *
      * @param obj
      * @param method
      * @param args

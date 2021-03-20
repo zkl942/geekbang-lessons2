@@ -1,8 +1,5 @@
 package org.geektimes.web.mvc.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * 页面控制器，负责服务端页面渲染
  *

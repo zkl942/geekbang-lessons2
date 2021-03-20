@@ -1,11 +1,12 @@
 package org.geektimes.projects.user.context;
 
 import net.sf.cglib.proxy.Enhancer;
-import org.geektimes.projects.user.aop.*;
+import org.geektimes.projects.user.aop.ProxyCallback;
+import org.geektimes.projects.user.aop.TransactionalHandler;
+import org.geektimes.projects.user.sql.LocalTransactional;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.function.ThrowableAction;
 import org.geektimes.web.mvc.function.ThrowableFunction;
-import org.geektimes.projects.user.sql.LocalTransactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -69,6 +70,12 @@ public class ComponentContext {
         return (ComponentContext) servletContext.getAttribute(CONTEXT_NAME);
     }
 
+    private static void close(Context context) {
+        if (context != null) {
+            ThrowableAction.execute(context::close);
+        }
+    }
+
     public ArrayList<Controller> getControllers() {
         ArrayList controllers = new ArrayList<Controller>();
         componentsMap.forEach((k, v) -> {
@@ -77,12 +84,6 @@ public class ComponentContext {
             }
         });
         return controllers;
-    }
-
-    private static void close(Context context) {
-        if (context != null) {
-            ThrowableAction.execute(context::close);
-        }
     }
 
     public void init(ServletContext servletContext) throws RuntimeException {
@@ -104,7 +105,7 @@ public class ComponentContext {
             Object component = entry.getValue();
             Class clazz = component.getClass();
             Method[] methods = clazz.getDeclaredMethods(); // public or private
-            for (Method method: methods) {
+            for (Method method : methods) {
                 // TODO: hardcoded LocalTransactional here
                 if (method.isAnnotationPresent(LocalTransactional.class)) {
                     needProxy = true;

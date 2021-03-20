@@ -116,13 +116,13 @@ public class DelegatingEntityManager implements EntityManager {
     }
 
     @Override
-    public void setFlushMode(FlushModeType flushMode) {
-        entityManager.setFlushMode(flushMode);
+    public FlushModeType getFlushMode() {
+        return entityManager.getFlushMode();
     }
 
     @Override
-    public FlushModeType getFlushMode() {
-        return entityManager.getFlushMode();
+    public void setFlushMode(FlushModeType flushMode) {
+        entityManager.setFlushMode(flushMode);
     }
 
     @Override

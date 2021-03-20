@@ -13,8 +13,10 @@ import java.lang.annotation.Target;
 public @interface UserValid {
 
     String message() default "密码：6-32 位 电话号码: 采用中国大陆方式（11 位校验）";
-    Class<?>[] groups() default { };
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 
     int pwFloor() default 0;
 

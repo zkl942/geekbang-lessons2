@@ -2,7 +2,7 @@ package org.geektimes.projects.user.management;
 
 import org.geektimes.projects.user.domain.User;
 
-public class UserManager implements UserManagerMBean{
+public class UserManager implements UserManagerMBean {
 
     private User user;
 

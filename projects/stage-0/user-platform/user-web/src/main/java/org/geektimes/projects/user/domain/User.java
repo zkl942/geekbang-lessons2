@@ -2,12 +2,9 @@ package org.geektimes.projects.user.domain;
 
 import org.geektimes.projects.user.validator.bean.validation.UserValid;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 

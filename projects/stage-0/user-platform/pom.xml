@@ -11,14 +11,20 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>my-web-mvc</module>
         <module>user-web</module>
+        <module>my-web-mvc</module>
+        <module>my-configuration</module>
+        <module>my-aop</module>
+        <module>my-dependency-injection</module>
     </modules>
 
     <properties>
         <revision>v1-SNAPSHOT</revision>
         <file.encoding>UTF-8</file.encoding>
         <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
+
+        <!-- MicroProfile 版本-->
+        <microprofile-config-api.version>2.0</microprofile-config-api.version>
 
         <!-- Artifacts 依赖版本 -->
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
@@ -44,6 +50,7 @@
     </properties>
 
     <!-- Artifacts 依赖版本管理 -->
+    <!-- dependencyManagement: is used by a POM to help manage dependency information across all of its children. -->
     <dependencyManagement>
 
         <dependencies>
@@ -118,6 +125,13 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>${cglib.version}</version>
+            </dependency>
+
+            <!-- MicroProfile -->
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>${microprofile-config-api.version}</version>
             </dependency>
 
         </dependencies>

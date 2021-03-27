@@ -1,11 +1,11 @@
 package org.geektimes.projects.user.web;
 
 import org.apache.commons.lang.StringUtils;
-import org.geektimes.projects.user.context.ComponentContext;
-import org.geektimes.web.mvc.HandlerMethodInfo;
-import org.geektimes.web.mvc.controller.Controller;
-import org.geektimes.web.mvc.controller.PageController;
-import org.geektimes.web.mvc.controller.RestController;
+import org.geektimes.projects.mvc.HandlerMethodInfo;
+import org.geektimes.projects.mvc.controller.Controller;
+import org.geektimes.projects.mvc.controller.PageController;
+import org.geektimes.projects.mvc.controller.RestController;
+import org.geektimes.projects.di.context.ClassicComponentContext;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -51,7 +51,7 @@ public class FrontControllerServlet extends HttpServlet {
      * 利用 JNDI
      */
     private void initHandleMethods() {
-        for (Controller controller : ComponentContext.getInstance().getControllers()) {
+        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {
 //        for (Controller controller : ServiceLoader.load(Controller.class)) {
             // SignupController
             Class<?> controllerClass = controller.getClass();

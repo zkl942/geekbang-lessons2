@@ -32,7 +32,7 @@
     目标注入的类型：javax.persistence.EntityManager
     -->
     <Resource name="bean/EntityManager" auth="Container"
-              type="org.geektimes.projects.user.orm.jpa.DelegatingEntityManager"
+              type="org.geektimes.projects.user.jpa.DelegatingEntityManager"
               persistenceUnitName="emf"
               propertiesLocation="META-INF/jpa-datasource.properties"
               factory="org.apache.naming.factory.BeanFactory"/>

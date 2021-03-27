@@ -1,0 +1,12 @@
+org.geektimes.projects.configuration.converter.BigDecimalConverter
+org.geektimes.projects.configuration.converter.BigIntegerConverter
+org.geektimes.projects.configuration.converter.BooleanConverter
+org.geektimes.projects.configuration.converter.ByteConverter
+org.geektimes.projects.configuration.converter.CharacterConverter
+org.geektimes.projects.configuration.converter.DoubleConverter
+org.geektimes.projects.configuration.converter.FloatConverter
+org.geektimes.projects.configuration.converter.IntegerConverter
+org.geektimes.projects.configuration.converter.LongConverter
+#org.geektimes.projects.configuration.converter.PrioritizedConverter
+org.geektimes.projects.configuration.converter.ShortConverter
+org.geektimes.projects.configuration.converter.StringConverter

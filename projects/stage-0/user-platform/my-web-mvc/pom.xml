@@ -13,7 +13,7 @@
     <artifactId>my-web-mvc</artifactId>
     <name>My Web-MVC Framework ${revision}</name>
     <packaging>jar</packaging>
-
+    <version>${revision}</version>
 
     <dependencies>
         <!-- Servlet API -->

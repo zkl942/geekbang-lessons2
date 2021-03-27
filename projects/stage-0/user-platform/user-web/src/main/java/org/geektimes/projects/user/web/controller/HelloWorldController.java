@@ -1,7 +1,7 @@
 package org.geektimes.projects.user.web.controller;
 
 import org.geektimes.projects.user.service.UserServiceTestingImpl;
-import org.geektimes.web.mvc.controller.PageController;
+import org.geektimes.projects.mvc.controller.PageController;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;

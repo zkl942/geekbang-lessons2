@@ -1,7 +1,10 @@
 package org.geektimes.projects.user.aop;
 
 import net.sf.cglib.proxy.MethodProxy;
-import org.geektimes.projects.user.context.ComponentContext;
+import org.geektimes.projects.aop.aop.AfterHandler;
+import org.geektimes.projects.aop.aop.BeforeHandler;
+import org.geektimes.projects.aop.aop.ErrorHandler;
+import org.geektimes.projects.di.context.ClassicComponentContext;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
@@ -15,13 +18,27 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
     /**
      * Hibernate does not explicitly support nested transactions,
      * using a JDBC 3.0 driver that is able to create savepoints can achieve this.
+     *
+     * ThreadLocal:
+     * This class provides thread-local variables. These variables differ from their normal
+     * counterparts in that each thread that accesses one (via its get or set method) has its own,
+     * independently initialized copy of the variable. ThreadLocal instances are typically private
+     * static fields in classes that wish to associate state with a thread (e.g., a user ID or
+     * Transaction ID).
+     * Each thread holds an implicit reference to its copy of a thread-local
+     * variable as long as the thread is alive and the ThreadLocal instance is accessible;
+     * after a thread goes away, all of its copies of thread-local instances are subject to
+     * garbage collection (unless other references to these copies exist).
      */
     public static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal() {
         @Override
         protected Object initialValue() {
             Connection conn = null;
             try {
-                conn = ((DataSource) ComponentContext.getInstance().getComponent("jdbc/UserPlatformDB")).getConnection();
+                /**
+                 * cant use
+                 */
+                conn = ((DataSource) ClassicComponentContext.getInstance().getComponent("jdbc/UserPlatformDB")).getConnection();
                 /**
                  * autoCommit mode must be off, otherwise each time you call
                  * flush you'll be commiting straight to the DB.
@@ -35,7 +52,8 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
     };
 
     /**
-     * we are only implementing 2-level nested transaction for simplicity
+     * https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/TransactionDefinition.html
+     * we are only implementing PROPAGATION_REQUIRED for simplicity
      * register 内部调用 update
      */
     public static ThreadLocal<HashMap<String, Savepoint>> savepointThreadLocal = new ThreadLocal() {

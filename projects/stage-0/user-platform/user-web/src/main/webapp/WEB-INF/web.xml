@@ -5,13 +5,21 @@
          http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          metadata-complete="true" version="2.5">
 
+    <!-- ServletContext 配置参数 -->
+    <!-- can get from microprofile -->
+    <context-param>
+        <param-name>application.name</param-name>
+        <param-value>user-web</param-value>
+    </context-param>
+
     <!-- 请确保这个 Listener 放置在首位 -->
-    <listener>
-        <listener-class>org.geektimes.projects.user.web.listener.ComponentContextInitializerListener</listener-class>
-    </listener>
+<!--    handled by microprofile instead with spi -->
+<!--    <listener>-->
+<!--        <listener-class>ComponentContextInitializerListener</listener-class>-->
+<!--    </listener>-->
 
     <!--    <listener>-->
-    <!--        <listener-class>org.geektimes.projects.user.web.listener.TestingListener</listener-class>-->
+    <!--        <listener-class>org.geektimes.projects.configuration.configuration.listener.TestingListener</listener-class>-->
     <!--    </listener>-->
 
     <servlet>
@@ -63,7 +71,7 @@
 
     <filter>
         <filter-name>CharsetEncodingFilter</filter-name>
-        <filter-class>org.geektimes.web.mvc.filter.CharsetEncodingFilter</filter-class>
+        <filter-class>org.geektimes.projects.mvc.filter.CharsetEncodingFilter</filter-class>
         <init-param>
             <!-- Filter 配置 = FilterConfig -->
             <param-name>encoding</param-name>

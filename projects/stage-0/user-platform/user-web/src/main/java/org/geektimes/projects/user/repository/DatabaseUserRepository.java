@@ -2,8 +2,8 @@ package org.geektimes.projects.user.repository;
 
 import org.geektimes.projects.user.aop.TransactionalHandler;
 import org.geektimes.projects.user.domain.User;
+import org.geektimes.projects.mvc.function.ThrowableFunction;
 import org.geektimes.projects.user.sql.DBConnectionManager;
-import org.geektimes.web.mvc.function.ThrowableFunction;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -84,9 +84,13 @@ public class DatabaseUserRepository implements UserRepository {
 //        return true;
 
         // not using hibernate here
-        String sql = "INSERT INTO users(name,password,email,phoneNumber) VALUES (?,?,?,?)";
-        int rowNum = executeUpdate(sql, user.getName(), user.getPassword(), user.getEmail(), user.getPhoneNumber());
-        return rowNum > 0;
+//        String sql = "INSERT INTO users(name,password,email,phoneNumber) VALUES (?,?,?,?)";
+//        int rowNum = executeUpdate(sql, user.getName(), user.getPassword(), user.getEmail(), user.getPhoneNumber());
+//        return rowNum > 0;
+
+        // use hibernate
+        entityManager.persist(user);
+        return true;
     }
 
     /**

@@ -7,6 +7,7 @@ import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.ServiceLoader;
 
 /**
  * 如何注册当前 ServletContextListener 实现
@@ -21,6 +22,12 @@ public class ServletContextConfigInitializer implements ServletContextListener {
         ServletContextConfigSource servletContextConfigSource = new ServletContextConfigSource(servletContext);
         // 获取当前 ClassLoader
         ClassLoader classLoader = servletContext.getClassLoader();
+        /**
+         * From Documentation:
+         * ConfigProviderResolver.instance():
+         * {@link ServiceLoader} is used to locate the first
+         * implementation that is visible from the class loader that defined this class.
+         */
         ConfigProviderResolver configProviderResolver = ConfigProviderResolver.instance();
         ConfigBuilder configBuilder = configProviderResolver.getBuilder();
         // 配置 ClassLoader
@@ -35,6 +42,8 @@ public class ServletContextConfigInitializer implements ServletContextListener {
         Config config = configBuilder.build();
         // 注册 Config 关联到当前 ClassLoader
         configProviderResolver.registerConfig(config, classLoader);
+        // 注册 Config 到 servletContext
+        servletContext.setAttribute("Config", config);
     }
 
     @Override

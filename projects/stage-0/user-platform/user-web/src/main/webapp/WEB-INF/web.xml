@@ -13,14 +13,10 @@
     </context-param>
 
     <!-- 请确保这个 Listener 放置在首位 -->
-<!--    handled by microprofile instead with spi -->
+<!--    handled by ServletContainerInitializer with spi -->
 <!--    <listener>-->
 <!--        <listener-class>ComponentContextInitializerListener</listener-class>-->
 <!--    </listener>-->
-
-    <!--    <listener>-->
-    <!--        <listener-class>org.geektimes.projects.configuration.configuration.listener.TestingListener</listener-class>-->
-    <!--    </listener>-->
 
     <servlet>
         <servlet-name>default</servlet-name>
@@ -47,6 +43,7 @@
         <url-pattern>*.js</url-pattern>
     </servlet-mapping>
 
+    <!-- dispatcherServlet -->
     <servlet>
         <servlet-name>FrontControllerServlet</servlet-name>
         <servlet-class>org.geektimes.projects.user.web.FrontControllerServlet</servlet-class>
@@ -58,6 +55,7 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!-- MBean agent -->
     <servlet>
         <servlet-name>jolokia-agent</servlet-name>
         <servlet-class>org.jolokia.http.AgentServlet</servlet-class>

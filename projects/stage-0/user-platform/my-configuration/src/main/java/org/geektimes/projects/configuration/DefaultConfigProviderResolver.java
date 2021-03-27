@@ -11,6 +11,14 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Microprofile Config does not contain an implementation itself but only provides the specified API
+ * Microprofile 本身只有接口跟abstract class，所有api都要我们自己实现
+ *
+ * From Documentation:
+ * The implementation of this class should register itself
+ * via the {@link java.util.ServiceLoader} mechanism.
+ */
 public class DefaultConfigProviderResolver extends ConfigProviderResolver {
 
     private ConcurrentMap<ClassLoader, Config> configsRepository = new ConcurrentHashMap<>();

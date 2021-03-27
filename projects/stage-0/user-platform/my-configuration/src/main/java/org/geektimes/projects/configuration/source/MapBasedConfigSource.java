@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * 基于 Map 数据结构 {@link ConfigSource} 实现
+ * 自定义 ConfigSource 实现
  */
 public abstract class MapBasedConfigSource implements ConfigSource {
 

@@ -1,11 +1,11 @@
 package org.geektimes.projects.user.web;
 
 import org.apache.commons.lang.StringUtils;
+import org.geektimes.projects.di.context.ClassicComponentContext;
 import org.geektimes.projects.mvc.HandlerMethodInfo;
 import org.geektimes.projects.mvc.controller.Controller;
 import org.geektimes.projects.mvc.controller.PageController;
 import org.geektimes.projects.mvc.controller.RestController;
-import org.geektimes.projects.di.context.ClassicComponentContext;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -98,9 +98,7 @@ public class FrontControllerServlet extends HttpServlet {
         return supportedHttpMethods;
     }
 
-    /**
-     * SCWCD
-     *
+    /***
      * @param request
      * @param response
      * @throws ServletException

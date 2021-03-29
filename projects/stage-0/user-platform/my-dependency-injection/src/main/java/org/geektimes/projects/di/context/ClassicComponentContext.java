@@ -1,7 +1,5 @@
 package org.geektimes.projects.di.context;
 
-import net.sf.cglib.proxy.Enhancer;
-import org.geektimes.projects.aop.aop.ProxyCallback;
 import org.geektimes.projects.mvc.controller.Controller;
 import org.geektimes.projects.mvc.function.ThrowableAction;
 import org.geektimes.projects.mvc.function.ThrowableFunction;
@@ -13,7 +11,6 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.naming.*;
 import javax.servlet.ServletContext;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Logger;

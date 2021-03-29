@@ -59,12 +59,6 @@
             <version>v1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.geekbang.projects</groupId>
-            <artifactId>my-aop</artifactId>
-            <version>v1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>

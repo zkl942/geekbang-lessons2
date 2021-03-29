@@ -29,6 +29,12 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
      * variable as long as the thread is alive and the ThreadLocal instance is accessible;
      * after a thread goes away, all of its copies of thread-local instances are subject to
      * garbage collection (unless other references to these copies exist).
+     *
+     * AFAIK, the typical use of ThreadLocal<Connection> is to store a unique database connection
+     * per thread, so that the same connection can be used in different methods in your business
+     * logic without the need of passing it as a parameter each time. Because the common servlet
+     * container implementation uses a thread to fulfill an HTTP request, then two different requests
+     * are guaranteed to use two different database connections.
      */
     public static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal() {
         @Override

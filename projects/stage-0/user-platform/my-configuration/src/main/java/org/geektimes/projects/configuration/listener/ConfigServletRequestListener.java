@@ -19,6 +19,7 @@ public class ConfigServletRequestListener implements ServletRequestListener {
         ClassLoader classLoader = servletContext.getClassLoader();
         ConfigProviderResolver configProviderResolver = ConfigProviderResolver.instance();
         Config config = configProviderResolver.getConfig(classLoader);
+        // ThreadLocal config (作业第二道题)
         configThreadLocal.set(config);
     }
 

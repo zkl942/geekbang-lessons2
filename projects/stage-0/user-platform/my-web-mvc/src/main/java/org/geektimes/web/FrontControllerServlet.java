@@ -1,4 +1,4 @@
-package org.geektimes.projects.user.web;
+package org.geektimes.web;
 
 import org.apache.commons.lang.StringUtils;
 import org.geektimes.projects.di.context.ClassicComponentContext;
@@ -17,10 +17,8 @@ import javax.ws.rs.Path;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.substringAfter;
@@ -51,9 +49,16 @@ public class FrontControllerServlet extends HttpServlet {
      * 利用 JNDI
      */
     private void initHandleMethods() {
-        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {
-//        for (Controller controller : ServiceLoader.load(Controller.class)) {
-            // SignupController
+//        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {   // tightly coupled
+//        for (Controller controller : ServiceLoader.load(Controller.class)) {   // spi
+
+        List<Controller> controllers = ClassicComponentContext.getInstance().getComponents()
+                .stream()
+                .filter(e -> e instanceof Controller)
+                .map(e -> (Controller) e)
+                .collect(Collectors.toList());
+
+        for (Controller controller : controllers) {
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
             String requestPath = pathFromClass.value();
@@ -70,9 +75,7 @@ public class FrontControllerServlet extends HttpServlet {
                 handleMethodInfoMapping.put(fullPath,
                         new HandlerMethodInfo(fullPath, method, supportedHttpMethods));
             }
-
         }
-//        System.out.println(controllersMapping);
     }
 
     /**

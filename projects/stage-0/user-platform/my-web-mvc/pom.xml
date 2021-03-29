@@ -33,6 +33,12 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.geekbang.projects</groupId>
+            <artifactId>my-dependency-injection</artifactId>
+            <version>v1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 </project>

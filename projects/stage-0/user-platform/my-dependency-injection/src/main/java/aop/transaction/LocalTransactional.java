@@ -1,4 +1,4 @@
-package org.geektimes.projects.user.sql;
+package aop.transaction;
 
 import java.lang.annotation.*;
 import java.sql.Connection;

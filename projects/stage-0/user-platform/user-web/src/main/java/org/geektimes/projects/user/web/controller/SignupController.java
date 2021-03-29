@@ -1,8 +1,8 @@
 package org.geektimes.projects.user.web.controller;
 
+import org.geektimes.projects.mvc.controller.PageController;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.service.UserServiceImpl;
-import org.geektimes.projects.mvc.controller.PageController;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;

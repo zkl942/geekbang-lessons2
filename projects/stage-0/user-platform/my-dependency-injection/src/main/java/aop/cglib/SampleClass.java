@@ -1,4 +1,4 @@
-package org.geektimes.projects.aop.cglib;
+package aop.cglib;
 
 import javax.annotation.Resource;
 

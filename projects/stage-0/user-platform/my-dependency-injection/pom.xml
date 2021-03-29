@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.geekbang.projects</groupId>
@@ -21,6 +21,7 @@
         <junit.version>5.7.0</junit.version>
     </properties>
 
+    <!-- NOTE: MAINTAIN LEAST DEPENDENCY IN DEPENDENCY INJECTION MODULE -->
     <dependencies>
 
         <!-- Servlet API -->
@@ -38,27 +39,20 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.geekbang.projects</groupId>
-            <artifactId>my-aop</artifactId>
-            <version>v1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.geekbang.projects</groupId>
-            <artifactId>my-web-mvc</artifactId>
-            <version>v1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
     <build>

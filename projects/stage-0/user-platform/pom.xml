@@ -14,7 +14,6 @@
         <module>user-web</module>
         <module>my-web-mvc</module>
         <module>my-configuration</module>
-        <module>my-aop</module>
         <module>my-dependency-injection</module>
     </modules>
 
@@ -47,6 +46,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <jolokia-core.version>1.6.2</jolokia-core.version>
         <cglib.version>2.2.2</cglib.version>
+        <junit.version>5.7.0</junit.version>
     </properties>
 
     <!-- Artifacts 依赖版本管理 -->
@@ -132,6 +132,21 @@
                 <groupId>org.eclipse.microprofile.config</groupId>
                 <artifactId>microprofile-config-api</artifactId>
                 <version>${microprofile-config-api.version}</version>
+            </dependency>
+
+            <!-- JUnit -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

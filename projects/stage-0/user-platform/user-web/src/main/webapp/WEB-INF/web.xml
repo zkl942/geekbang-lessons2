@@ -13,10 +13,10 @@
     </context-param>
 
     <!-- 请确保这个 Listener 放置在首位 -->
-<!--    handled by ServletContainerInitializer with spi -->
-<!--    <listener>-->
-<!--        <listener-class>ComponentContextInitializerListener</listener-class>-->
-<!--    </listener>-->
+    <!--    handled by ServletContainerInitializer with spi -->
+    <!--    <listener>-->
+    <!--        <listener-class>ComponentContextInitializerListener</listener-class>-->
+    <!--    </listener>-->
 
     <servlet>
         <servlet-name>default</servlet-name>
@@ -46,7 +46,7 @@
     <!-- dispatcherServlet -->
     <servlet>
         <servlet-name>FrontControllerServlet</servlet-name>
-        <servlet-class>org.geektimes.projects.user.web.FrontControllerServlet</servlet-class>
+        <servlet-class>org.geektimes.web.FrontControllerServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

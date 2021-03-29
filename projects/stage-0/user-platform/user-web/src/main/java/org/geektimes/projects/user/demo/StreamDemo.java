@@ -37,7 +37,7 @@ public class StreamDemo {
         empList.stream().forEach(employee -> System.out.println(employee));
 
         // map
-        Integer[] empIds = { 1, 2, 3 };
+        Integer[] empIds = {1, 2, 3};
 
         /**
          * collect:

@@ -1,16 +1,18 @@
 package org.geektimes.projects.di.context;
 
-import org.geektimes.projects.mvc.controller.Controller;
-import org.geektimes.projects.mvc.function.ThrowableAction;
-import org.geektimes.projects.mvc.function.ThrowableFunction;
-//import org.geektimes.projects.user.aop.TransactionalHandler;
-//import org.geektimes.projects.user.sql.LocalTransactional;
+import aop.interceptor.ProxyCallback;
+import aop.transaction.LocalTransactional;
+import aop.transaction.TransactionalHandler;
+import net.sf.cglib.proxy.Enhancer;
+import org.geektimes.projects.di.function.ThrowableAction;
+import org.geektimes.projects.di.function.ThrowableFunction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.naming.*;
 import javax.servlet.ServletContext;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Logger;
@@ -21,19 +23,14 @@ import java.util.stream.Stream;
  */
 public class ClassicComponentContext implements ComponentContext {
 
-    private static String CONTEXT_NAME = ClassicComponentContext.class.getName();
-
     private static final String COMPONENT_ENV_CONTEXT_NAME = "java:comp/env";
-
+    private static String CONTEXT_NAME = ClassicComponentContext.class.getName();
     private static final Logger logger = Logger.getLogger(CONTEXT_NAME);
 
     private static ServletContext servletContext; // 请注意
     // 假设一个 Tomcat JVM 进程，三个 Web Apps，会不会相互冲突？（不会冲突）
     // static 字段是 JVM 缓存吗？（是 ClassLoader 缓存）
-
-    public static ClassicComponentContext getInstance() {
-        return (ClassicComponentContext) ClassicComponentContext.servletContext.getAttribute(CONTEXT_NAME);
-    }
+    private Context envContext; // Component Env Context
 
 //    private static ApplicationContext applicationContext;
 
@@ -46,11 +43,7 @@ public class ClassicComponentContext implements ComponentContext {
 //        WebApplicationContextUtils.getRootWebApplicationContext()
 //    }
 //    private List<String> needProxyAnnotationNames = new ArrayList<>();
-
-    private Context envContext; // Component Env Context
-
     private ClassLoader classLoader;
-
     /**
      * componentsMap has all the original components. This is necessary in the injection phase
      * because cglib proxy class lost all the fields of original class and injectComponents
@@ -62,22 +55,28 @@ public class ClassicComponentContext implements ComponentContext {
      */
     private Map<String, Object> proxyComponentsMap = new LinkedHashMap<>();
 
+    public static ClassicComponentContext getInstance() {
+        return (ClassicComponentContext) ClassicComponentContext.servletContext.getAttribute(CONTEXT_NAME);
+    }
+
     private static void close(Context context) {
         if (context != null) {
             ThrowableAction.execute(context::close);
         }
     }
 
-    public ArrayList<Controller> getControllers() {
-        ArrayList controllers = new ArrayList<Controller>();
-        componentsMap.forEach((k, v) -> {
-            if (v instanceof Controller) {
-                controllers.add(v);
-            }
-        });
-        return controllers;
-    }
-
+    /**
+     * should be avoided since it introduces dependency on mvc module
+     */
+//    public ArrayList<Controller> getControllers() {
+//        ArrayList controllers = new ArrayList<Controller>();
+//        componentsMap.forEach((k, v) -> {
+//            if (v instanceof Controller) {
+//                controllers.add(v);
+//            }
+//        });
+//        return controllers;
+//    }
     @Override
     public void init(ServletContext servletContext) throws RuntimeException {
         ClassicComponentContext.servletContext = servletContext;
@@ -86,43 +85,43 @@ public class ClassicComponentContext implements ComponentContext {
         this.classLoader = servletContext.getClassLoader();
         initEnvContext();
         instantiateComponents();
-//        proxyComponents(); // for transaction AOP
+        proxyComponents(); // for transaction AOP
         initializeComponents();
     }
 
     /**
      * TODO: 这里先注释掉，因为这里都是hardcoded，跟user-web有循环依赖，有什么好方法呢？？
      */
-//    private void proxyComponents() {
-//        Iterator<Map.Entry<String, Object>> itr = componentsMap.entrySet().iterator();
-//        while (itr.hasNext()) {
-//            boolean needProxy = false;
-//            Map.Entry<String, Object> entry = itr.next();
-//            Object component = entry.getValue();
-//            Class clazz = component.getClass();
-//            Method[] methods = clazz.getDeclaredMethods(); // public or private
-//            for (Method method : methods) {
-//                // TODO: hardcoded LocalTransactional here
-//                if (method.isAnnotationPresent(LocalTransactional.class)) {
-//                    needProxy = true;
-//                    break;
-//                }
-//            }
-//            if (needProxy) {
-//                // replace with proxied component
-//                Enhancer enhancer = new Enhancer();
-//                enhancer.setSuperclass(clazz);
-//                ProxyCallback proxy = new ProxyCallback(component);
-//                // TODO: hardcoded TransactionalHandler
-//                TransactionalHandler transactionalHandler = new TransactionalHandler();
-//                proxy.addBeforeHandler(transactionalHandler);
-//                proxy.addAfterHandler(transactionalHandler);
-//                proxy.addErrorHandler(transactionalHandler);
-//                enhancer.setCallback(proxy);
-//                proxyComponentsMap.put(entry.getKey(), enhancer.create());
-//            }
-//        }
-//    }
+    private void proxyComponents() {
+        Iterator<Map.Entry<String, Object>> itr = componentsMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            boolean needProxy = false;
+            Map.Entry<String, Object> entry = itr.next();
+            Object component = entry.getValue();
+            Class clazz = component.getClass();
+            Method[] methods = clazz.getDeclaredMethods(); // public or private
+            for (Method method : methods) {
+                // TODO: hardcoded LocalTransactional here
+                if (method.isAnnotationPresent(LocalTransactional.class)) {
+                    needProxy = true;
+                    break;
+                }
+            }
+            if (needProxy) {
+                // replace with proxied component
+                Enhancer enhancer = new Enhancer();
+                enhancer.setSuperclass(clazz);
+                ProxyCallback proxy = new ProxyCallback(component);
+                // TODO: hardcoded TransactionalHandler
+                TransactionalHandler transactionalHandler = new TransactionalHandler();
+                proxy.addBeforeHandler(transactionalHandler);
+                proxy.addAfterHandler(transactionalHandler);
+                proxy.addErrorHandler(transactionalHandler);
+                enhancer.setCallback(proxy);
+                proxyComponentsMap.put(entry.getKey(), enhancer.create());
+            }
+        }
+    }
 
     /**
      * 实例化组件
@@ -257,6 +256,15 @@ public class ClassicComponentContext implements ComponentContext {
             return (C) obj;
         }
         return (C) componentsMap.get(name);
+    }
+
+    /**
+     * get all components
+     *
+     * @return
+     */
+    public Collection<Object> getComponents() {
+        return Collections.unmodifiableCollection(componentsMap.values());
     }
 
     /**

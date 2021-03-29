@@ -1,11 +1,17 @@
-package org.geektimes.projects.aop.aop;
+package aop.interceptor;
 
+import aop.generic.AfterHandler;
+import aop.generic.BeforeHandler;
+import aop.generic.ErrorHandler;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+/**
+ * this is generic to aop
+ */
 public class ProxyCallback implements MethodInterceptor {
     private Object originalComponent;
     private ArrayList<BeforeHandler> beforeHandlers = new ArrayList<>();

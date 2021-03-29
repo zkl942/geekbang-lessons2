@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Microprofile Config does not contain an implementation itself but only provides the specified API
  * Microprofile 本身只有接口跟abstract class，所有api都要我们自己实现
- *
+ * <p>
  * From Documentation:
  * The implementation of this class should register itself
  * via the {@link java.util.ServiceLoader} mechanism.

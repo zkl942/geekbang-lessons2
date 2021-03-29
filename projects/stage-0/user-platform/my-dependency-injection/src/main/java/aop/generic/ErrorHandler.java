@@ -1,4 +1,4 @@
-package org.geektimes.projects.aop.aop;
+package aop.generic;
 
 import net.sf.cglib.proxy.MethodProxy;
 

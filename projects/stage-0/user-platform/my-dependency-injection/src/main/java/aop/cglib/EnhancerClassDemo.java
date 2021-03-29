@@ -1,4 +1,4 @@
-package org.geektimes.projects.aop.cglib;
+package aop.cglib;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.FixedValue;

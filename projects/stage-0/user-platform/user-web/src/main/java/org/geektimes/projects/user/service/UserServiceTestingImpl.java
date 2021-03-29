@@ -1,8 +1,8 @@
 package org.geektimes.projects.user.service;
 
+import aop.transaction.LocalTransactional;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.repository.DatabaseUserRepository;
-import org.geektimes.projects.user.sql.LocalTransactional;
 
 import javax.annotation.Resource;
 import javax.validation.Validator;

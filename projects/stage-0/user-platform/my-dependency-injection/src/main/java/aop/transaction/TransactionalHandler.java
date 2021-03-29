@@ -1,9 +1,9 @@
-package org.geektimes.projects.user.aop;
+package aop.transaction;
 
+import aop.generic.AfterHandler;
+import aop.generic.BeforeHandler;
+import aop.generic.ErrorHandler;
 import net.sf.cglib.proxy.MethodProxy;
-import org.geektimes.projects.aop.aop.AfterHandler;
-import org.geektimes.projects.aop.aop.BeforeHandler;
-import org.geektimes.projects.aop.aop.ErrorHandler;
 import org.geektimes.projects.di.context.ClassicComponentContext;
 
 import javax.sql.DataSource;
@@ -18,7 +18,7 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
     /**
      * Hibernate does not explicitly support nested transactions,
      * using a JDBC 3.0 driver that is able to create savepoints can achieve this.
-     *
+     * <p>
      * ThreadLocal:
      * This class provides thread-local variables. These variables differ from their normal
      * counterparts in that each thread that accesses one (via its get or set method) has its own,
@@ -29,7 +29,7 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
      * variable as long as the thread is alive and the ThreadLocal instance is accessible;
      * after a thread goes away, all of its copies of thread-local instances are subject to
      * garbage collection (unless other references to these copies exist).
-     *
+     * <p>
      * AFAIK, the typical use of ThreadLocal<Connection> is to store a unique database connection
      * per thread, so that the same connection can be used in different methods in your business
      * logic without the need of passing it as a parameter each time. Because the common servlet
@@ -37,12 +37,17 @@ public class TransactionalHandler implements BeforeHandler, AfterHandler, ErrorH
      * are guaranteed to use two different database connections.
      */
     public static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal() {
+        /**
+         * initialValue method will be invoked the first time a thread
+         * accesses the variable with the get method
+         */
         @Override
         protected Object initialValue() {
             Connection conn = null;
             try {
                 /**
-                 * cant use
+                 * DataSource 本身就是一个pool（JNDI），这里相当于从pool里面取出一个connection来作为Thread的专用
+                 * maxActive="100" maxIdle="30" maxWait="10000"
                  */
                 conn = ((DataSource) ClassicComponentContext.getInstance().getComponent("jdbc/UserPlatformDB")).getConnection();
                 /**

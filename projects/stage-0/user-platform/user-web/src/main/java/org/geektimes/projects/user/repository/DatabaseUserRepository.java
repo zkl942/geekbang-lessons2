@@ -1,8 +1,8 @@
 package org.geektimes.projects.user.repository;
 
-import org.geektimes.projects.user.aop.TransactionalHandler;
-import org.geektimes.projects.user.domain.User;
+import aop.transaction.TransactionalHandler;
 import org.geektimes.projects.mvc.function.ThrowableFunction;
+import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
 import javax.annotation.Resource;

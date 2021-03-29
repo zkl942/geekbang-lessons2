@@ -69,4 +69,8 @@
               type="org.geektimes.projects.user.management.MBeanServerDelegation"
               factory="org.apache.naming.factory.BeanFactory"/>
 
+    <Resource name="bean/TransactionalHandler" auth="Container"
+              type="aop.transaction.TransactionalHandler"
+              factory="org.apache.naming.factory.BeanFactory"/>
+
 </Context>

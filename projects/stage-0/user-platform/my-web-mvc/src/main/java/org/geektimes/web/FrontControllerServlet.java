@@ -49,14 +49,22 @@ public class FrontControllerServlet extends HttpServlet {
      * 利用 JNDI
      */
     private void initHandleMethods() {
-//        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {   // tightly coupled
-//        for (Controller controller : ServiceLoader.load(Controller.class)) {   // spi
+//        1. tightly coupled
+//        for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {
 
-        List<Controller> controllers = ClassicComponentContext.getInstance().getComponents()
-                .stream()
-                .filter(e -> e instanceof Controller)
-                .map(e -> (Controller) e)
-                .collect(Collectors.toList());
+//        2. spi
+//        for (Controller controller : ServiceLoader.load(Controller.class)) {
+
+//        3. fetch all from ComponentContext and check here
+//        List<Controller> controllers = ClassicComponentContext.getInstance().getComponents()
+//                .stream()
+//                .filter(e -> e instanceof Controller)
+//                .map(e -> (Controller) e)
+//                .collect(Collectors.toList());
+
+//        4. only fetch Controller from ComponentContext without ComponentContext
+//        knowing anything about Controller interface
+        ArrayList<Controller> controllers = ClassicComponentContext.getInstance().getComponentsOfClass(Controller.class);
 
         for (Controller controller : controllers) {
             Class<?> controllerClass = controller.getClass();

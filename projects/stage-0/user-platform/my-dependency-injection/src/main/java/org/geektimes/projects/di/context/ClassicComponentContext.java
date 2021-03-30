@@ -259,6 +259,27 @@ public class ClassicComponentContext implements ComponentContext {
     }
 
     /**
+     * generic method for fetching specific types of components
+     * @param tClass
+     * @param <T>
+     * @return
+     */
+    public <T> ArrayList<T> getComponentsOfClass(Class<T> tClass) {
+        ArrayList<T> results = new ArrayList<>();
+        componentsMap.forEach((k, v) -> {
+            // cannot use v instanceof tClass here
+            if (tClass.isAssignableFrom(v.getClass())) {
+                if (proxyComponentsMap.containsKey(k)) {
+                    results.add((T) proxyComponentsMap.get(k));
+                } else {
+                    results.add((T) v);
+                }
+            }
+        });
+        return results;
+    }
+
+    /**
      * get all components
      *
      * @return

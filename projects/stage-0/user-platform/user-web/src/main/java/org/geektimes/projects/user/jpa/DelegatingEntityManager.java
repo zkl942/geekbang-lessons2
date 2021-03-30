@@ -34,7 +34,11 @@ public class DelegatingEntityManager implements EntityManager {
     }
 
     private Map loadProperties(String propertiesLocation) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        /**
+         * 在这里classLoader0 跟 classLoader 是一样的classloader示例
+         */
+        ClassLoader classLoader0 = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = getClass().getClassLoader();
         URL propertiesFileURL = classLoader.getResource(propertiesLocation);
         Properties properties = new Properties();
         try {

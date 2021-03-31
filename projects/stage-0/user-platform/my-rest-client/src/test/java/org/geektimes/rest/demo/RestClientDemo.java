@@ -9,6 +9,13 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
+/**
+ * Java 只提供最原始的http组件，但是提供这些规范给别人实现
+ * 有了这些规范的实现就易用了
+ * 所以说:
+ * JAX-RS is nothing more than a specification, a set of interfaces and annotations offered by Java EE.
+ * 这里我们自己即是API的实现者，也是API的使用者
+ */
 public class RestClientDemo {
 
     public static void main(String[] args) {

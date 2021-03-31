@@ -12,6 +12,8 @@
 
     <artifactId>my-reactive-messaging</artifactId>
     <name>My Reactive Messaging Framework ${revision}</name>
+    <version>${revision}</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

@@ -88,7 +88,8 @@ public class DatabaseUserRepository implements UserRepository {
 //        int rowNum = executeUpdate(sql, user.getName(), user.getPassword(), user.getEmail(), user.getPhoneNumber());
 //        return rowNum > 0;
 
-        // use hibernate
+        // use hibernate (hibernate works with jdbc transaction
+        // (doesnt have to be EntityManager.getTransaction().begin()))
         entityManager.persist(user);
         return true;
     }

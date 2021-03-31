@@ -31,7 +31,7 @@ public class DefaultRuntimeDelegate extends RuntimeDelegate {
 
     @Override
     public <T> HeaderDelegate<T> createHeaderDelegate(Class<T> type) throws IllegalArgumentException {
-        return null;
+        return new DefaultHeaderDelegate();
     }
 
     @Override

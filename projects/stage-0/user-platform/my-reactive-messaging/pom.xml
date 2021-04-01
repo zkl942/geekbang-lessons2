@@ -22,6 +22,7 @@
 
     <dependencies>
 
+        <!-- provides implementation of reactive streams specification, aka. org.reactivestreams -->
         <dependency>
             <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
             <artifactId>microprofile-reactive-messaging-api</artifactId>

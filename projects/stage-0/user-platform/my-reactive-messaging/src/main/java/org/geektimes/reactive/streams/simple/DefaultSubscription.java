@@ -1,4 +1,4 @@
-package org.geektimes.reactive.streams;
+package org.geektimes.reactive.streams.simple;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;

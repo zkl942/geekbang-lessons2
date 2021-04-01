@@ -1,16 +1,17 @@
-package org.geektimes.reactive.streams;
+package org.geektimes.reactive.streams.sync;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 /**
  * (Internal) Subscription Adapter with one {@link Subscriber}
+ * 这个就是subscription的实现
  */
-class SubscriptionAdapter implements Subscription {
+class BusinessSubscription implements Subscription {
 
     private final DecoratingSubscriber<?> subscriber;
 
-    public SubscriptionAdapter(Subscriber<?> subscriber) {
+    public BusinessSubscription(Subscriber<?> subscriber) {
         this.subscriber = new DecoratingSubscriber(subscriber);
     }
 

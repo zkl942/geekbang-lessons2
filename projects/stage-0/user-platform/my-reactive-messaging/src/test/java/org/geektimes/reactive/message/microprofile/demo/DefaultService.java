@@ -1,4 +1,4 @@
-package org.geektimes.reactive.message.demo;
+package org.geektimes.reactive.message.microprofile.demo;
 
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;

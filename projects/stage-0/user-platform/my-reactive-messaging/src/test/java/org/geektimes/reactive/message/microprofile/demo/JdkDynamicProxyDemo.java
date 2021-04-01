@@ -1,4 +1,4 @@
-package org.geektimes.reactive.message.demo;
+package org.geektimes.reactive.message.microprofile.demo;
 
 import org.reactivestreams.Publisher;
 

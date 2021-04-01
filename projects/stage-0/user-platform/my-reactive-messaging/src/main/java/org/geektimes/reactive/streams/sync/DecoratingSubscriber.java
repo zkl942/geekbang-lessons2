@@ -1,4 +1,4 @@
-package org.geektimes.reactive.streams;
+package org.geektimes.reactive.streams.sync;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -7,10 +7,11 @@ import java.util.logging.Logger;
 
 /**
  * (Internal) Decorating {@link Subscriber}
+ * 这个是经过一系列包装后最终在使用的subscriber
  *
  * @param <T>
  */
-class DecoratingSubscriber<T> implements Subscriber<T> {
+public class DecoratingSubscriber<T> implements Subscriber<T> {
 
     private final Subscriber<T> source;
 

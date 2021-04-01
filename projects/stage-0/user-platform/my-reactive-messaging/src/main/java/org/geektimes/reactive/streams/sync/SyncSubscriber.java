@@ -1,22 +1,35 @@
-package org.geektimes.reactive.streams;
+package org.geektimes.reactive.streams.sync;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-public class DefaultSubscriber<T> implements Subscriber<T> {
+/**
+ * 业务数据订阅者
+ *
+ * @param <T>
+ */
+public class SyncSubscriber<T> implements Subscriber<T> {
 
     private Subscription subscription;
 
     private int count = 0;
 
+    private final long maxRequest;
+
+    public SyncSubscriber(long maxRequest) {
+        this.maxRequest = maxRequest;
+    }
+
     @Override
     public void onSubscribe(Subscription s) {
         this.subscription = s;
+        this.subscription.request(maxRequest);
     }
 
     @Override
     public void onNext(Object o) {
-        if (++count > 2) { // 当到达数据阈值时，取消 Publisher 给当前 Subscriber 发送数据
+        // TODO: 阈值在这里不等于maxRequest，很迷？？
+        if (count++ > 2) { // 当到达数据阈值时，取消 Publisher 给当前 Subscriber 发送数据
             subscription.cancel();
             return;
         }

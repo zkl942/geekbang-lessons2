@@ -1,4 +1,4 @@
-package org.geektimes.reactive.streams;
+package org.geektimes.reactive.streams.simple;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
@@ -20,9 +20,9 @@ public class DefaultPublisher<T> implements Publisher<T> {
 
     public void publish(T data) {
         // 广播
-        subscribers.forEach(subscriber -> {
+        subscribers.forEach(subscriberWrapper -> {
 
-            SubscriberWrapper subscriberWrapper = (SubscriberWrapper) subscriber;
+//            SubscriberWrapper subscriberWrapper = (SubscriberWrapper) subscriber;
 //                    SubscriberWrapper.class.cast(subscriber);
 
             DefaultSubscription subscription = subscriberWrapper.getSubscription();
@@ -34,7 +34,7 @@ public class DefaultPublisher<T> implements Publisher<T> {
             }
 
             // 继续发送
-            subscriber.onNext(data);
+            subscriberWrapper.onNext(data);
         });
     }
 

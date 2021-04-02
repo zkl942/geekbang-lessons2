@@ -1,15 +1,11 @@
 package org.geektimes.projects.user.web.controller;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.command.ActiveMQTopic;
 import org.geektimes.jms.ActiveMQConsumer;
 import org.geektimes.jms.ActiveMQProducer;
 import org.geektimes.projects.mvc.controller.PageController;
 import org.geektimes.projects.user.service.UserServiceTestingImpl;
 
 import javax.annotation.Resource;
-import javax.jms.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -49,10 +45,17 @@ public class HelloWorldController implements PageController {
     @GET
     @Path("/activemq")
     public void testActiveMQJMS(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-        activeMQProducer.runQueue();
-        activeMQProducer.runTopic();
-        activeMQConsumer.runQueue();
-        activeMQConsumer.runTopic();
+        activeMQConsumer.receiveFromQueue();
+        activeMQConsumer.receiveFromTopic();
+
+        activeMQProducer.sendToQueue(5);
+        activeMQProducer.sendToTopic(5);
+
+        activeMQProducer.sendToTopic(3);
+        activeMQProducer.sendToQueue(2);
+
+//        activeMQProducer.close();
+//        activeMQConsumer.close();
     }
 
 }

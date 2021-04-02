@@ -8,6 +8,9 @@ import org.apache.activemq.command.ActiveMQTopic;
 import javax.annotation.Resource;
 import javax.jms.*;
 
+/**
+ * note: Topics don't retain messages
+ */
 public class ActiveMQConsumer implements ExceptionListener {
 
     @Resource(name = "jms/ActiveMQConnectionFactory")
@@ -19,38 +22,63 @@ public class ActiveMQConsumer implements ExceptionListener {
     @Resource(name = "jms/topic/MyTopic")
     private ActiveMQTopic activeMQTopic;
 
-    public <T extends ActiveMQDestination> void run(T t) {
+    private MessageConsumer consumer = null;
+    private Session session = null;
+    private Connection connection = null;
+
+    public <T extends ActiveMQDestination> void receive(T t) {
         try {
+            // in case /hello/activemq is called again when consumer is already initialized
+            if (consumer != null && session != null && connection != null) {
+                return;
+            }
+
             // Create a Connection
-            Connection connection = activeMQConnectionFactory.createConnection();
+            connection = activeMQConnectionFactory.createConnection();
             connection.start();
 
             connection.setExceptionListener(this);
 
             // Create a Session
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // Create the destination (Topic or Queue)
             Destination destination = t;
 
             // Create a MessageConsumer from the Session to the Topic or Queue
-            MessageConsumer consumer = session.createConsumer(destination);
+            consumer = session.createConsumer(destination);
 
-            // Wait for a message
-            Message message = consumer.receive(1000);
+            // onMessage is run in another thread
+            MessageListener messageListener = message -> {
+                try {
+                    if (message instanceof TextMessage) {
+                        TextMessage textMessage = (TextMessage) message;
+                        String text = textMessage.getText();
+                        if (t instanceof ActiveMQQueue) {
+                            System.out.println("Received message: " + text + " from queue");
+                        } else {
+                            System.out.println("Received message: " + text + " from topic");
+                        }
+                    }
+                } catch (JMSException e) {
+                    e.printStackTrace();
+                }
+            };
+            consumer.setMessageListener(messageListener);
+        } catch (Exception e) {
+            System.out.println("Caught: " + e);
+            e.printStackTrace();
+        }
+    }
 
-            if (message instanceof TextMessage) {
-                TextMessage textMessage = (TextMessage) message;
-                String text = textMessage.getText();
-                System.out.println("Received: " + text);
-            } else {
-                System.out.println("Received: " + message);
-            }
-
+    public void close() {
+        try {
+            // If this method is called whilst a message listener is in progress in another thread then
+            // it will block until the message listener has completed.
             consumer.close();
             session.close();
             connection.close();
-        } catch (Exception e) {
+        } catch (JMSException e) {
             System.out.println("Caught: " + e);
             e.printStackTrace();
         }
@@ -60,11 +88,11 @@ public class ActiveMQConsumer implements ExceptionListener {
         System.out.println("JMS Exception occured.  Shutting down client.");
     }
 
-    public void runQueue() {
-        run(activeMQQueue);
+    public void receiveFromQueue() {
+        receive(activeMQQueue);
     }
 
-    public void runTopic() {
-        run(activeMQTopic);
+    public void receiveFromTopic() {
+        receive(activeMQTopic);
     }
 }

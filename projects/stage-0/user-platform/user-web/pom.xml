@@ -34,6 +34,12 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.geekbang.projects</groupId>
+            <artifactId>my-reactive-messaging</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -103,6 +109,12 @@
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
+        </dependency>
+
+        <!-- ActiveMQ -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
         </dependency>
 
     </dependencies>

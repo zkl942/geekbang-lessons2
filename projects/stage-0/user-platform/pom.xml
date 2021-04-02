@@ -147,6 +147,7 @@
                 <version>${jolokia-core.version}</version>
             </dependency>
 
+            <!-- AOP -->
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>

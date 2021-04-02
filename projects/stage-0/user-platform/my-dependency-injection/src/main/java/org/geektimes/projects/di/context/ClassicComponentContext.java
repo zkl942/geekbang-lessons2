@@ -317,13 +317,13 @@ public class ClassicComponentContext implements ComponentContext {
                 NameClassPair element = e.nextElement();
                 String className = element.getClassName();
                 Class<?> targetClass = classLoader.loadClass(className);
+                String fullName = name.startsWith("/") ?
+                        element.getName() : name + "/" + element.getName();
                 if (Context.class.isAssignableFrom(targetClass)) {
                     // 如果当前名称是目录（Context 实现类）的话，递归查找
-                    fullNames.addAll(listComponentNames(element.getName()));
+                    fullNames.addAll(listComponentNames(fullName));
                 } else {
                     // 否则，当前名称绑定目标类型的话话，添加该名称到集合中
-                    String fullName = name.startsWith("/") ?
-                            element.getName() : name + "/" + element.getName();
                     fullNames.add(fullName);
                 }
             }

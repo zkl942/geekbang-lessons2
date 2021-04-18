@@ -75,9 +75,9 @@ public class CachingTest {
     }
 
     @Test
-    public void testSampleRedis() {
+    public void testSampleJedis() {
         CachingProvider cachingProvider = Caching.getCachingProvider();
-        CacheManager cacheManager = cachingProvider.getCacheManager(URI.create("redis://127.0.0.1:6379/"), null);
+        CacheManager cacheManager = cachingProvider.getCacheManager(URI.create("jedis://127.0.0.1:6379/"), null);
         // configure the cache
         MutableConfiguration<String, Integer> config =
                 new MutableConfiguration<String, Integer>()
@@ -99,6 +99,36 @@ public class CachingTest {
         cache.put(key, value1);
 
         Integer value2 = cache.get(key);
+        assertEquals(value1, value2);
+        cache.remove(key);
+        assertNull(cache.get(key));
+    }
+
+    @Test
+    public void testSampleLettuce() {
+        CachingProvider cachingProvider = Caching.getCachingProvider();
+        CacheManager cacheManager = cachingProvider.getCacheManager(URI.create("lettuce://127.0.0.1:6379/"), null);
+        // configure the cache
+        MutableConfiguration<String, String> config =
+                new MutableConfiguration<String, String>()
+                        .setTypes(String.class, String.class);
+
+        // create the cache
+        Cache<String, String> cache = cacheManager.createCache("redisCache", config);
+
+        // add listener
+        cache.registerCacheEntryListener(cacheEntryListenerConfiguration(new TestCacheEntryListener<>()));
+
+        // cache operations
+        String key = "animal";
+        String value1 = "cat";
+        cache.put(key, value1);
+
+        // update
+        value1 = "dog";
+        cache.put(key, value1);
+
+        String value2 = cache.get(key);
         assertEquals(value1, value2);
         cache.remove(key);
         assertNull(cache.get(key));

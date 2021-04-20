@@ -40,8 +40,10 @@ public class SsoApplication extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated())
 				.exceptionHandling(e->e
 				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))).oauth2Login();
+//		built-in support for logout
 		http.logout(l->l.
 				logoutSuccessUrl("/").permitAll());
+//		attach CSRF token
 		http.csrf(c->c.
 				csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
 	}
